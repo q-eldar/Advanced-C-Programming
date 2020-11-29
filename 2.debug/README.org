@@ -1,0 +1,11 @@
+* What is debugger?
+  It's a program runs other programs. Why do we need a program that
+  runs other program? Debugger is special program, simply way to say
+  examines variables change. Yes, we can do this by printf(). But
+  there is more things I haven't sed. As program grows we need to
+  manage memory, add functions, call library functions, copy stufs,
+  delete stufs etc.. . Using printf bloats our code and doesn't solve
+  all problems. That is why there is tool called gdb, that helps us
+  to find bugs and solve issues systematic way, and also its free.
+  - [[http://www.unknownroad.com/rtfm/gdbtut/gdbtoc.html][Learn more about gdb]]
+  - [[https://www.udacity.com/course/software-debugging--cs259][Free Udacity course about systematic way of debugging]]
