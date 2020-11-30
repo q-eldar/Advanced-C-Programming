@@ -3,9 +3,8 @@
 #include <stdarg.h>
 #include <string.h>
 #include <stdint.h>
-#include <math.h>
 
-#include "../hdr/mintf.h"
+#include "../hdr/smintf.h"
 /** 
  * http://www.strudel.org.uk/itoa/
  * C++ version 0.4 char* style "itoa":
@@ -34,7 +33,7 @@ static char* itoa(int value, char* result, int base) {
   return result;
 }
 
-void print_integer(int n, int radix, char *prefix){
+const int print_integer(char *arr, int n, int radix, char *prefix){
   int is_negative = n < 0;
   int prefix_size = strlen(prefix);
 
@@ -42,67 +41,97 @@ void print_integer(int n, int radix, char *prefix){
   char *tmp = itoa(n, buf, radix);
   const int numof_digits = strlen(tmp);
   
-  const int size = is_negative + prefix_size + numof_digits + 1; 
-  char *res = calloc(size, sizeof(char));
+  const int size = is_negative + prefix_size + numof_digits; 
+  /* char *res = calloc(size, sizeof(char)); */
 
   if(is_negative){
-    res[0] = '-';
+    arr[0] = '-';
   }
 
   if(prefix_size > 0){
-    strncat(res, prefix, strlen(prefix));
+    strncat(arr, prefix, strlen(prefix));
   }
 
-  strncat(res, tmp, numof_digits);
+  strncat(arr, tmp, numof_digits);
   /* res[size-1] = '\0'; */
 
-  fputs(res, stdout);
-  free(res);
+  /* fputs(res, stdout); */
+  return size;
 }
 
-void mintf(const char *format, ...){
+const char* smintf(const char *format, ...){
   va_list varlist;
   va_start(varlist, format);
-  char* buf = malloc(1024);
+  
+  char *tmp = malloc(1024);
+  char *buf = tmp;
   const char *ptr;
+  
   for(ptr = format; *ptr; ptr++){
     if(*ptr == '%'){
       ptr++;
       switch(*ptr){
       case 'd':
-	print_integer(va_arg(varlist, int), 10, "");
+	{
+	  int n = print_integer(buf, va_arg(varlist, int), 10, "");
+	  buf += n;
+	}
 	break;
       case 'x':
-	print_integer(va_arg(varlist, int), 16, "0x");
+	{
+	  int n = print_integer(buf, va_arg(varlist, int), 16, "0x");
+	  buf += n;
+	}
 	break;
       case 'b':
-	print_integer(va_arg(varlist, int), 2, "0b");
+	{
+	  int n =print_integer(buf, va_arg(varlist, int), 2, "0b");
+	  buf += n;
+	}
 	break;
       case '$':
 	{
 	  double d = va_arg(varlist, double);
-	  print_integer((int)d, 10, "$");
-	  fputc('.', stdout);
-	  print_integer(abs(((int)(d*100)%100)), 10, "");
+	  int n = print_integer(buf, (int)d, 10, "$");
+	  buf += n;
+	  *(buf + n) = '.';
+	  buf += 1;
+	  n = print_integer(buf, abs(((int)(d*100)%100)), 10, "");
+	  buf += n;
 	}
 	break;
       case 's':
-	fputs(va_arg(varlist, char*), stdout);
+	{
+	  char *s = va_arg(varlist, char*);
+	  int n = strlen(s);
+	  strncat(buf, s, n);
+	  buf += n;
+	}
 	break;
       case 'c':
-	fputc((char)va_arg(varlist, int), stdout);
+	{
+	  *buf = (char)va_arg(varlist, int);
+	  buf += 1;
+	}
 	break;
       case '%':
-	fputc('%', stdout);
+	{
+	  *buf = '%';
+	  buf += 1;
+	}
 	break;
       default:
-	fputc('%', stdout);
-	fputc(*ptr, stdout);
+	*buf = '%';
+	buf += 1;
+	*buf = *ptr;
+	buf += 2;
 	break;
       }
     } else {
-      fputc(*ptr, stdout);
+	*buf = *ptr;
+	buf += 2;
     }
   }
+  return tmp;
 }
 
