@@ -9,7 +9,6 @@
  * C++ version 0.4 char* style "itoa":
  * Written by Lukás Chmela
  * Released under GPLv3.
-
  */
 static char* itoa(int value, char* result, int base) {
   // check that the base if valid
@@ -40,7 +39,7 @@ char* print_integer(int n, int radix, char *prefix){
   int prefix_size = strlen(prefix);
   const int size = is_negative + prefix_size + numof_digits + 1; 
 
-  char *res = calloc(size, sizeof(char));
+  char *res = malloc(sizeof(char) * size);
   char *tmp = res;
 
   if(is_negative){

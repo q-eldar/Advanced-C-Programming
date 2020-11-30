@@ -1,0 +1,15 @@
+* About project
+  Create function mintf(...) that prints integers, strings, doubles
+  etc.. . This function emulates ~stdio.h~ ~prinf()~ function in
+  simple way.
+* Topics
+** Variadic functions
+   As array can be variable sized (dynamic arrays), functions may take
+   variable number of parameters. That means there is situations we
+   cant guess how many parameters we will send to process to a
+   function.
+** printf
+   In C with simple form of variadic function we can handle same data
+   type with any nomber of parameters. For different types we handle it
+   adding format specifier, like ~"%d"~, ~"%s"~, like we do with
+   function printf.
