@@ -1,9 +1,15 @@
 #pragma once
 
+#include <stdio.h>		/* size_t */
 /** 
-   @Node structure defined in src/cake.c
+   List node struncture
+   @val: string 
+   @next: pointer to the next node
  */
-typedef struct Node Node;
+typedef struct Node {
+  char* val;
+  struct Node *next;
+} Node;
 
 /**
    Removes nth node starting at *node repeatedly until just one node
